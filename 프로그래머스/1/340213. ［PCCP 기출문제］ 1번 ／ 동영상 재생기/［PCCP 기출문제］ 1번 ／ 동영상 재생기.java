@@ -8,7 +8,7 @@ class Solution {
         int curTime = parsingTime(pos);
         int opStart = parsingTime(op_start);
         int opEnd = parsingTime(op_end);
-        
+        // 명령 수행
         for (int i = 0; i < commands.length; i++) {
             curTime = opJump(curTime, opStart, opEnd);
             if (commands[i].equals("next"))

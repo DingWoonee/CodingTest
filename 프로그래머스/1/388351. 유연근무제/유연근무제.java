@@ -1,36 +1,38 @@
 import java.util.*;
 
 class Solution {
+    // 다 봐야 할듯.
     public int solution(int[] schedules, int[][] timelogs, int startday) {
-        Set<Integer> failed = new HashSet<>();
-        int day = startday;
-        int j = -1;
-        do {
-            j++;
-            // 주말 건너뛰기
-            if (day == 6 || day == 7) {
-                day = day == 7 ? 1 : 7;
-                continue;
-            }
-            
-            // 검사
-            for (int i = 0; i < schedules.length; i++) {
-                if (!isSafe(schedules[i], timelogs[i][j])) {
-                    failed.add(i);
+        int answer = 0;
+        
+        for (int i = 0; i < schedules.length; i++) {
+            boolean isGood = true;
+            int maxTime = plusTen(schedules[i]);
+            for (int j = 0; j < 7; j++) {
+                int today = (startday + j) % 7;
+                if (today == 6 || today == 7 || today == 0) {
+                    continue;
+                }
+                int time = timelogs[i][j];
+                if (time > maxTime) {
+                    isGood = false;
+                    break;
                 }
             }
-            
-            // 요일 증가
-            day = (day == 6 ? 7 : (day + 1) % 7);
-        } while (day != startday);
+            if (isGood) {
+                answer++;
+            }
+        }
         
-        return schedules.length - failed.size();
+        return answer;
     }
     
-    // 시간 안에 왔는지 체크
-    private boolean isSafe(int hopeTime, int realTime) {
-        int diff = ((realTime / 100) * 60 + realTime % 100) 
-            - ((hopeTime / 100) * 60 + hopeTime % 100);
-        return diff <= 10;
+    private int plusTen(int time) {
+        int minute = time % 100;
+        if (minute < 50) {
+            return time + 10;
+        }
+        return (time / 100 + 1) * 100 + (minute + 10) % 60;
     }
+    
 }

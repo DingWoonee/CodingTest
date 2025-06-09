@@ -10,7 +10,7 @@ class Solution {
             int maxTime = plusTen(schedules[i]);
             for (int j = 0; j < 7; j++) {
                 int today = (startday + j) % 7;
-                if (today == 6 || today == 7 || today == 0) {
+                if (today == 6 || today == 0) {
                     continue;
                 }
                 int time = timelogs[i][j];
@@ -32,7 +32,7 @@ class Solution {
         if (minute < 50) {
             return time + 10;
         }
-        return (time / 100 + 1) * 100 + (minute + 10) % 60;
+        return (time / 100 + 1) * 100 + minute - 50;
     }
     
 }

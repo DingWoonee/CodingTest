@@ -5,6 +5,7 @@ class Solution {
         
         if (h != 0 && board[h - 1][w].equals(color))
             answer++;
+        // length 그대로 썼다가 당할뻔;
         if (h != board.length - 1 && board[h + 1][w].equals(color))
             answer++;
         if (w != 0 && board[h][w - 1].equals(color))

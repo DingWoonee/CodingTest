@@ -6,15 +6,11 @@ class Solution {
         int extIndex = getIndex(ext);
         int sortIndex = getIndex(sort_by);
         
-        List<int[]> result = Arrays.stream(data)
+        return Arrays.stream(data)
             .filter(d -> d[extIndex] < val_ext)
-            .sorted(Comparator.comparing(d -> d[sortIndex]))
-            .collect(Collectors.toList());
-        int[][] answer = new int[result.size()][4];
-        for (int i = 0; i < result.size(); i++) {
-            answer[i] = result.get(i);
-        }
-        return answer;
+            // .sorted(Comparator.comparing(d -> d[sortIndex]))
+            .sorted((d1, d2) -> d1[sortIndex] - d2[sortIndex])
+            .toArray(int[][]::new);
     }
     
     private int getIndex(String ext) {

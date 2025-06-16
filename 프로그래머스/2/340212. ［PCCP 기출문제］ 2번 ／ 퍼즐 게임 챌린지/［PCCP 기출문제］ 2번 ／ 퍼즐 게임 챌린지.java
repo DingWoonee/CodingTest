@@ -3,7 +3,7 @@ class Solution {
     // + (다음 문제 풀이 시간 + (다음 문제 풀이 시간 + 이전 문제 풀이 시간) * Math.max(0, diff - level))
     // < limin인 최소 level은?
     
-    // 모든 
+    // brute force
     public int solution(int[] diffs, int[] times, long limit) {
         int answer = 1;
         

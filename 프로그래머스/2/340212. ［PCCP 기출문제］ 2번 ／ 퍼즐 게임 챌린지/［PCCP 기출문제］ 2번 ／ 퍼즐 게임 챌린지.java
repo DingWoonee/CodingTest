@@ -6,21 +6,26 @@ class Solution {
     // brute force
     public int solution(int[] diffs, int[] times, long limit) {
         int answer = 1;
+        int high = 100000;
         
-        while (true) {
+        while (answer != high) {
+            // 1 10 -> 5 // 1 5 -> 3 // 4 5
+            int mid = (answer + high) / 2;
+            
             long sum = times[0];
             boolean isSuccess = true;
             for (int i = 1; i < diffs.length; i++) {
-                sum += (times[i] + (times[i] + times[i - 1]) * Math.max(0, diffs[i] - answer));
+                sum += (times[i] + (times[i] + times[i - 1]) * Math.max(0, diffs[i] - mid));
                 if (sum > limit) {
                     isSuccess = false;
                     break;
                 }
             }
             if (isSuccess) {
-                break;
+                high = mid;
+            } else {
+                answer = mid + 1;
             }
-            answer++;
         }
         
         return answer;

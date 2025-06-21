@@ -5,7 +5,7 @@ class Solution {
     public int solution(int[][] points, int[][] routes) {
         int answer = 0;
         // List: time, r, c
-        Map<List<Integer>, Integer> events = new HashMap<>();
+        Map<String, Integer> events = new HashMap<>();
         
         for (int i = 0; i < routes.length; i++) {
             int time = 0;
@@ -15,7 +15,7 @@ class Solution {
                 int[] end = points[route[j + 1] - 1];
                 if (end[0] > start[0]) {
                     for (int r = start[0]; r < end[0]; r++) {
-                        List<Integer> event = List.of(time, r, start[1]);
+                        String event = time + " " +  r + " " + start[1];
                         events.put(event, events.getOrDefault(event, 0) + 1);
                         if (events.get(event) == 2) { // 중복 제거를 위해 딱 한번만 기록
                             answer++;
@@ -24,7 +24,7 @@ class Solution {
                     }
                 } else {
                     for (int r = start[0]; r > end[0]; r--) {
-                        List<Integer> event = List.of(time, r, start[1]);
+                        String event = time + " " +  r + " " + start[1];
                         events.put(event, events.getOrDefault(event, 0) + 1);
                         if (events.get(event) == 2) { // 중복 제거를 위해 딱 한번만 기록
                             answer++;
@@ -34,7 +34,7 @@ class Solution {
                 }
                 if (end[1] > start[1]) {
                     for (int c = start[1]; c < end[1]; c++) {
-                        List<Integer> event = List.of(time, end[0], c);
+                        String event = time + " " +  end[0] + " " + c;
                         events.put(event, events.getOrDefault(event, 0) + 1);
                         if (events.get(event) == 2) { // 중복 제거를 위해 딱 한번만 기록
                             answer++;
@@ -43,7 +43,7 @@ class Solution {
                     }
                 } else {
                     for (int c = start[1]; c > end[1]; c--) {
-                        List<Integer> event = List.of(time, end[0], c);
+                        String event = time + " " +  end[0] + " " + c;
                         events.put(event, events.getOrDefault(event, 0) + 1);
                         if (events.get(event) == 2) { // 중복 제거를 위해 딱 한번만 기록
                             answer++;
@@ -55,7 +55,7 @@ class Solution {
             }
             // 루트의 마지막 위치
             int[] last = points[route[route.length - 1] - 1];
-            List<Integer> event = List.of(time, last[0], last[1]);
+            String event = time + " " +  last[0] + " " + last[1];
             events.put(event, events.getOrDefault(event, 0) + 1);
             if (events.get(event) == 2) { // 중복 제거를 위해 딱 한번만 기록
                 answer++;

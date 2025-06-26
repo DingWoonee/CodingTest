@@ -1,67 +1,60 @@
 import java.util.*;
 
-public class Solution {
+class Solution {
+    /**
+    루트 -> Non 루트
+    홀수 노드 -> 역홀수 노드
+    짝수 노드 -> 역짝수 노드
+    역홀수 노드 -> 홀수 노드
+    역짝수 노드 -> 짝수 노드
+    */
     public int[] solution(int[] nodes, int[][] edges) {
-        int n = nodes.length;
-        // 1) 노드 번호 → 인덱스 매핑
-        int maxId = 0;
-        for (int id : nodes) maxId = Math.max(maxId, id);
-        int[] idx = new int[maxId + 1];
-        Arrays.fill(idx, -1);
-        for (int i = 0; i < n; i++) {
-            idx[nodes[i]] = i;
+        int[] answer = new int[2];
+        
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int node : nodes) {
+            graph.put(node, new ArrayList<>());
         }
-
-        // 2) 인접 리스트 구성
-        List<Integer>[] adj = new List[n];
-        for (int i = 0; i < n; i++) {
-            adj[i] = new ArrayList<>();
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
         }
-        for (int[] e : edges) {
-            int u = idx[e[0]], v = idx[e[1]];
-            adj[u].add(v);
-            adj[v].add(u);
-        }
-
-        // 3) 컴포넌트별로 BFS/DFS 돌면서 A, B 개수 세기
-        boolean[] visited = new boolean[n];
-        int oddTreeCount = 0, invOddTreeCount = 0;
-
-        for (int i = 0; i < n; i++) {
-            if (visited[i]) continue;
-            // 새 컴포넌트 탐색
+        
+        int[] visited = new int[1000001];
+        for (int node : nodes) {
+            if (visited[node] != 0) {
+                continue;
+            }
+            
             Deque<Integer> queue = new ArrayDeque<>();
-            queue.offer(i);
-            visited[i] = true;
-
-            int countA = 0, compSize = 0;
+            queue.offer(node);
+            visited[node] = 1;
+            
+            int countHJ = 0;
+            int countReverseHJ = 0;
             while (!queue.isEmpty()) {
-                int u = queue.poll();
-                compSize++;
-
-                // p(u) = u%2, d(u) = deg(u)%2
-                int p = nodes[u] & 1;
-                int d = adj[u].size() & 1;
-                if (p == d) countA++;
-
-                for (int v : adj[u]) {
-                    if (!visited[v]) {
-                        visited[v] = true;
-                        queue.offer(v);
+                int cur = queue.poll();
+                if ((cur & 1) == (graph.get(cur).size() & 1)) {
+                    countHJ++;
+                } else {
+                    countReverseHJ++;
+                }
+                visited[cur] = 1;
+                
+                for (int sub : graph.get(cur)) {
+                    if (visited[sub] == 0) {
+                        queue.offer(sub);
                     }
                 }
             }
-
-            // 홀짝 트리 가능?
-            if (countA == 1) {
-                oddTreeCount++;
+            if (countHJ == 1) {
+                answer[0]++;
             }
-            // 역홀짝 트리 가능?
-            if (compSize - countA == 1) {
-                invOddTreeCount++;
+            if (countReverseHJ == 1) {
+                answer[1]++;
             }
         }
-
-        return new int[]{oddTreeCount, invOddTreeCount};
+        
+        return answer;
     }
 }

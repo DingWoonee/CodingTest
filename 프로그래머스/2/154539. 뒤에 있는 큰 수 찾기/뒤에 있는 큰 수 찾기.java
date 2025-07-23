@@ -3,6 +3,9 @@ import java.util.*;
 최초 접근
 - Map의 List로 각 숫자의 인덱스를 저장한다.
 - 다음 원소를 볼 때 그것보다 작은 Map 요소에 대해서 값을 넣어준다.
+
+복습 시 해볼 전략
+- 스택을 사용해보자.
 */
 class Solution {
     public int[] solution(int[] numbers) {

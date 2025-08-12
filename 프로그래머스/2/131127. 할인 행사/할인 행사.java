@@ -1,6 +1,8 @@
 import java.util.*;
 /*
-처음부터 끝까지 가면서 
+앞에서 부터 슬라이딩 하면서 체크
+
+최종 풀이 시간: 19분 42초
 */
 class Solution {
     public int solution(String[] want, int[] number, String[] discount) {
@@ -28,6 +30,7 @@ class Solution {
             for (String key : wantMap.keySet()) {
                 if (wantMap.get(key) > sliceMap.getOrDefault(key, 0)) {
                     flag = true;
+                    break;
                 }
             }
             if (!flag) {

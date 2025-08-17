@@ -8,21 +8,15 @@ class Solution {
         
         Set<Integer> set = new HashSet<>();
         
-        int[] concat = new int[len * 2];
-        for (int i = 0; i < len; i++) {
-            concat[i] = elements[i];
-            concat[i + len] = elements[i];
-        }
-        
         for (int i = 1; i < len + 1; i++) {
             int sum = 0;
             for (int j = 0; j < i; j++) {
-                sum += concat[j];
+                sum += elements[j % len];
             }
             set.add(sum);
             for (int j = 0; j < len - 1; j++) {
-                sum -= concat[j];
-                sum += concat[j + i];
+                sum -= elements[j % len];
+                sum += elements[(j + i) % len];
                 set.add(sum);
             }
         }

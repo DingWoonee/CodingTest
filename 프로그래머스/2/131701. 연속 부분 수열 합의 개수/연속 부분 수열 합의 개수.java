@@ -1,7 +1,5 @@
 import java.util.*;
-/*
-완전 탐색 -> n^n -> 최대 1000^1000
-*/
+
 class Solution {
     public int solution(int[] elements) {
         int len = elements.length;

@@ -8,38 +8,22 @@ class Solution {
     public int solution(int[] order) {
         int answer = 0;
         
-        int idx = 0; // order에 이 idx보다 작은게 나오면 보조벨트에 있는 것임.
+        int idx = 0;
         Deque<Integer> stack = new ArrayDeque<>();
-        int orderIdx = 0;
-        for (; orderIdx < order.length; orderIdx++) {
-            int cur = order[orderIdx];
-            if (idx > cur) {
-                if (stack.peek() == cur) {
+        for (int i = 0; i < order.length; i++) {
+            stack.push(i + 1);
+            while (!stack.isEmpty()) {
+                if (stack.peek() == order[idx]) {
                     stack.pop();
-                    answer++;
-                    continue;
+                    idx++;
+                } else if (order[idx] < i + 1) {
+                    return idx;
                 } else {
                     break;
                 }
             }
-            while (idx + 1 != cur) {
-                stack.push(idx + 1);
-                idx++;
-            }
-            answer++;
-            idx++;
-        }
-        // 보조벨트 처리
-        for (; orderIdx < order.length; orderIdx++) {
-            int cur = order[orderIdx];
-            if (stack.peek() == cur) {
-                stack.pop();
-                answer++;
-            } else {
-                break;
-            }
         }
         
-        return answer;
+        return idx;
     }
 }

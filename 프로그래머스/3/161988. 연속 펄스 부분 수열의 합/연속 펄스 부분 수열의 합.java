@@ -17,35 +17,16 @@ class Solution {
             seq2[i] = sequence[i] * -k;
             k = -k;
         }
-        // seq1 dp
+        // dp
         long[] dp1 = new long[len];
-        dp1[0] = seq1[0];
-        for (int i = 1; i < len; i++) {
-            long cur = dp1[i - 1] + seq1[i];
-            if (dp1[i - 1] >= 0) {
-                dp1[i] = cur;
-            } else {
-                dp1[i] = Math.max(cur, seq1[i]);
-            }
-        }
-        // seq2 dp
         long[] dp2 = new long[len];
+        dp1[0] = seq1[0];
         dp2[0] = seq2[0];
+        long answer = Math.max(dp1[0], dp2[0]);
         for (int i = 1; i < len; i++) {
-            long cur = dp2[i - 1] + seq2[i];
-            if (dp2[i - 1] >= 0) {
-                dp2[i] = cur;
-            } else {
-                dp2[i] = Math.max(cur, seq2[i]);
-            }
-        }
-        // 최댓값 찾기
-        long answer = Long.MIN_VALUE;
-        for (long n : dp1) {
-            answer = Math.max(answer, n);
-        }
-        for (long n : dp2) {
-            answer = Math.max(answer, n);
+            dp1[i] = Math.max(dp1[i - 1] + seq1[i], seq1[i]);
+            dp2[i] = Math.max(dp2[i - 1] + seq2[i], seq2[i]);
+            answer = Math.max(Math.max(dp1[i], dp2[i]), answer);
         }
         return answer;
     }

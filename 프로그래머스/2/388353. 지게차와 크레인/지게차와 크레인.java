@@ -1,75 +1,95 @@
 import java.util.*;
-
+/*
+[풀이 전략]
+지게차로 꺼내는 함수 -> 각 항목에 대해 DFS로 꺼낼 수 있는지 검사.(일시적으로 이전 버전을 유지해야 함.)
+크레인으로 꺼내는 함수
+=> 각 request에 대해 처리
+(꺼낸 것은 '-'처리)
+*/
 class Solution {
+    
+    int answer, rows, cols;
+    int[] dx = {1, -1, 0, 0};
+    int[] dy = {0, 0, 1, -1};
+    
     public int solution(String[] storage, String[] requests) {
-        int rows = storage.length;
-        int cols = storage[0].length();
-        int answer = rows * cols;
-        // char 배열로 변환
-        char[][] storageChar = new char[rows][cols];
+        rows = storage.length;
+        cols = storage[0].length();
+        answer = rows * cols;
+        
+        char[][] arr = new char[rows][cols];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                storageChar[i][j] = storage[i].charAt(j);
+                arr[i][j] = storage[i].charAt(j);
             }
         }
-        // requests 수행
+        
         for (String req : requests) {
-            // 크레인 요청인 경우
-            if (req.length() == 2) {
-                char ch = req.charAt(0);
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        if (storageChar[i][j] == ch) {
-                            answer--;
-                            storageChar[i][j] = ' ';
-                        }
-                    }
-                }
-            }
-            // 지게차 요청인 경우
-            else if (req.length() == 1) {
-                char ch = req.charAt(0);
-                List<int[]> deleteList = new ArrayList<>();
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        if (storageChar[i][j] == ch) {
-                            // 깊은 복사
-                            char[][] copy = new char[storageChar.length][];
-                            for (int k = 0; k < storageChar.length; k++) {
-                                copy[k] = storageChar[k].clone();
-                            }
-                            if (isOut(copy, i, j)) {
-                                deleteList.add(new int[]{i, j});
-                            }
-                        }
-                    }
-                }
-                for (int[] arr : deleteList) {
-                    storageChar[arr[0]][arr[1]] = ' ';
-                    answer--;
-                }
+            char target = req.charAt(0);
+            if (req.length() == 1) {
+                arr = byCar(arr, target);
+            } else {
+                byCrain(arr, target);
             }
         }
         
         return answer;
     }
     
-    // 재귀 함수
-    private boolean isOut(char[][] arr, int row, int col) {
-        // 바깥인지 판단
-        if (row == 0 || row == arr.length - 1 || col == 0 || col == arr[0].length - 1) {
-            return true;
+    private char[][] byCar(char[][] storage, char target) {
+        char[][] clone = new char[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            clone[i] = storage[i].clone();
         }
-        // 바깥으로 못가는거 판단
-        if (arr[row - 1][col] != ' ' && arr[row + 1][col] != ' '
-           && arr[row][col - 1] != ' ' && arr[row][col + 1] != ' ') {
-            return false;
+        boolean[][] visited = new boolean[rows][cols];
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (storage[i][j] != target) continue;
+                
+                for (boolean[] arr : visited) {
+                    Arrays.fill(arr, false);
+                }
+                Deque<int[]> stack = new ArrayDeque<>();
+                stack.push(new int[]{i, j});
+                visited[i][j] = true;
+                while (!stack.isEmpty()) {
+                    int[] cur = stack.pop();
+                    
+                    if (cur[0] == 0 
+                        || cur[0] == rows - 1
+                        || cur[1] == 0
+                        || cur[1] == cols - 1) {
+                        answer--;
+                        clone[i][j] = '-';
+                        break;
+                    }
+                    
+                    for (int d = 0; d < 4; d++) {
+                        int row = cur[0] + dx[d];
+                        int col = cur[1] + dy[d];
+                        if (row >= 0 && row < rows
+                            && col >= 0 && col < cols
+                            && !visited[row][col] 
+                            && storage[row][col] == '-') {
+                            stack.push(new int[]{row, col});
+                            visited[row][col] = true;
+                        }
+                    }
+                }
+            }
         }
-        // 길 찾기
-        arr[row][col] = '-';
-        return (arr[row - 1][col] == ' ' ? isOut(arr, row - 1, col) : false)
-            || (arr[row + 1][col] == ' ' ? isOut(arr, row + 1, col) : false)
-            || (arr[row][col - 1] == ' ' ? isOut(arr, row, col - 1) : false)
-            || (arr[row][col + 1] == ' ' ? isOut(arr, row, col + 1) : false);
+        return clone;
+    }
+    
+    private void byCrain(char[][] storage, char target) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (storage[i][j] == target) {
+                    answer--;
+                    storage[i][j] = '-';
+                }
+            }
+        }
     }
 }

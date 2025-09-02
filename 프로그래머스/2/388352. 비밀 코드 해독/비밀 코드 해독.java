@@ -1,42 +1,53 @@
-import java.util.*;
-import java.util.stream.*;
-
+/*
+[풀이 전략]
+최대 조합 개수 -> 30C5 = 3 * 29 * 7 * 9 * 26 = 29 * 26 * 189 = 약 18만
+18만개에 대해 최대 10번 체크
+=> 완전 탐색을 해도 매우 합리적
+*/
 class Solution {
     
-    private int answer = 0;
+    int answer = 0;
+    int[][] q;
+    int[] ans;
     
     public int solution(int n, int[][] q, int[] ans) {
-        int[] visited = new int[n + 1];
+        this.q = q;
+        this.ans = ans;
         
-        backtrack(n, q, ans, 0, visited, 1);
+        combination(n, 1, 0, new boolean[n + 1]);
         
         return answer;
     }
     
-    private void backtrack(int n, int[][] inputs, int[] ans, int count, int[] visited, int idx) {
-        if (count == 5) {
-            // 정답 체크
-            for (int i = 0; i < inputs.length; i++) {
-                int[] input = inputs[i];
-                int sum = 0;
-                for (int num : input) {
-                    if (visited[num] == 1) {
-                        sum++;
-                    }
-                }
-                if (ans[i] != sum) {
-                    return;
+    private void check(boolean[] selected) {
+        boolean isSuccess = true;
+        for (int i = 0; i < q.length; i++) {
+            int count = 0;
+            for (int n : q[i]) {
+                if (selected[n]) {
+                    count++;
                 }
             }
-            // 정답
-            answer++;
-            return;
+            if (count != ans[i]) {
+                isSuccess = false;
+            }
         }
-        // 재귀호출
-        for (int i = idx; i <= n; i++) {
-            visited[i] = 1;
-            backtrack(n, inputs, ans, count + 1, visited, i + 1);
-            visited[i] = 0;
+        if (isSuccess) {
+            answer++;
         }
     }
+    
+    private void combination(int max, int start, int count, boolean[] selected) {
+        if (count == 5) {
+            check(selected);
+            return;
+        }
+        
+        for (int i = start; i <= max - 4 + count; i++) {
+            selected[i] = true;
+            combination(max, i + 1, count + 1, selected);
+            selected[i] = false;
+        }
+    }
+    
 }

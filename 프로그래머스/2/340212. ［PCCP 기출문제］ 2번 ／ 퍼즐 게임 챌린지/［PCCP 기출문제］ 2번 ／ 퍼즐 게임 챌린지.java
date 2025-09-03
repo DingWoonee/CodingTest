@@ -1,33 +1,39 @@
+/*
+- level >= diff
+    time_cur 사용
+- level < diff
+    (diff - level) * (time_cur + time_prev) + time_cur 사용
+
+[풀이 전략]
+브루트포스 => 최대 30만번 * 10만번 => 300억..
+이진탐색 => 최대 30만번 * log 100,000 => 약 200만번
+*/
 class Solution {
-    // 첫 문제 풀이 시간 
-    // + (다음 문제 풀이 시간 + (다음 문제 풀이 시간 + 이전 문제 풀이 시간) * Math.max(0, diff - level))
-    // < limin인 최소 level은?
-    
-    // brute force
     public int solution(int[] diffs, int[] times, long limit) {
-        int answer = 1;
-        int high = 100000;
+        int head = 1, tail = 100000;
         
-        while (answer != high) {
-            // 1 10 -> 5 // 1 5 -> 3 // 4 5
-            int mid = (answer + high) / 2;
-            
-            long sum = times[0];
-            boolean isSuccess = true;
-            for (int i = 1; i < diffs.length; i++) {
-                sum += (times[i] + (times[i] + times[i - 1]) * Math.max(0, diffs[i] - mid));
-                if (sum > limit) {
-                    isSuccess = false;
-                    break;
-                }
-            }
-            if (isSuccess) {
-                high = mid;
+        while (head < tail) {
+            long sum = calc(diffs, times, (head + tail) / 2);
+            if (sum > limit) {
+                head = (head + tail) / 2 + 1;
             } else {
-                answer = mid + 1;
+                tail = (head + tail) / 2;
             }
         }
         
-        return answer;
+        return head;
+    }
+    
+    private long calc(int[] diffs, int[] times, int level) {
+        long sum = 0;
+        for (int i = 0; i < diffs.length; i++) {
+            int diff = diffs[i] - level;
+            if (diff <= 0) {
+                sum += times[i];
+            } else {
+                sum += (diff * (times[i] + times[i - 1]) + times[i]);
+            }
+        }
+        return sum;
     }
 }

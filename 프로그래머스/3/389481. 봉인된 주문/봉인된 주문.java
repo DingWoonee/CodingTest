@@ -1,58 +1,46 @@
+/*
+주문 - 알파벳 소문자 11글자 이하
+정렬 - 글자수 적은 순 -> 사전 순서
+상황 - 중간에 몇 개가 삭제됨
+목표 - 삭제된 상황에서 n번째 주문을 찾아야 함.
+
+[풀이 전략]
+a~z를 1~26으로 변환해서 풀이
+*/
 import java.util.*;
 
-class Solution {
-    /** 
-    문자열을 26진수로 생각
-    */
+public class Solution {
     public String solution(long n, String[] bans) {
-        int preCount = 0;
-        List<Long> postList = new ArrayList<>();
+        Arrays.sort(bans, (a, b) -> a.length() == b.length() ? a.compareTo(b) : a.length() - b.length());
+        
         for (String ban : bans) {
-            long l = toLong(ban);
-            if (n >= l) {
-                preCount++;
-            } else {
-                postList.add(l);
-            }
-        }
-        postList.sort(Comparator.comparing(e -> e));
-        
-        long answer = n + preCount;
-        for (long l : postList) {
-            if (answer >= l) {
-                answer++;
-            } else {
-                break;
+            if (n >= strToLong(ban)) {
+                n++;
             }
         }
         
-        return toStr(answer);
+        return longToStr(n);
     }
     
-    private long toLong(String str) {
-        long sum = 0;
-        int length = str.length();
-        for (int i = 0; i < length; i++) {
-            sum += Math.pow(26, length - i - 1) * (str.charAt(i) - 96);
+    private long strToLong(String str) {
+        long result = 0;
+        for (int i = 0; i < str.length(); i++) {
+            result += Math.pow(26, str.length() - i - 1) * (str.charAt(i) - 'a' + 1);
         }
-        return sum;
+        return result;
     }
     
-    private String toStr(long l) {
-        List<Integer> list = new ArrayList<>();
-        while (l > 0) {
-            long rest = l % 26L;
-            l = l / 26L;
-            if (rest == 0) {
-                rest = 26;
-                l--;
+    private String longToStr(long n) {
+        String result = "";
+        while (n > 0) {
+            if (n % 26 == 0) {
+                result = "z" + result;
+                n = n / 26 - 1;
+            } else {
+                result = Character.toString((char) (n % 26 - 1) + 'a') + result;
+                n /= 26;
             }
-            list.add((int) rest);
         }
-        String str = "";
-        for (int i : list) {
-            str = ((char) (i + 96)) + str;
-        }
-        return str;
+        return result;
     }
 }

@@ -19,9 +19,11 @@ class Solution {
             map.put(Character.toString(term.charAt(0)), Integer.parseInt(term.split(" ")[1]));
         }
         // 검사
+        int todayInt = toDays(today);
         for (int i = 0; i < privacies.length; i++) {
             String[] split = privacies[i].split(" ");
-            if (addMonth(split[0], map.get(split[1])).compareTo(today) < 0) {
+            int curInt = toDays(split[0]) + map.get(split[1]) * 28 - 1;
+            if (todayInt > curInt) {
                 answer.add(i + 1);
             }
         }
@@ -33,31 +35,10 @@ class Solution {
         return ans;
     }
     
-    private String addMonth(String date, int add) {
+    private int toDays(String date) {
         String[] split = date.split("\\.");
-        int year = Integer.parseInt(split[0]);
-        int month = Integer.parseInt(split[1]);
-        int day = Integer.parseInt(split[2]);
-        month += add;
-        if (month > 12) {
-            if (month % 12 == 0) {
-                year += (month / 12 - 1);
-                month = 12;
-            } else {
-                year += (month / 12);
-                month %= 12;
-            }
-        }
-        day--;
-        if (day == 0) {
-            month--;
-            if (month == 0) {
-                year--;
-                month = 12;
-            }
-            day = 28;
-        }
-        
-        return String.format("%d.%02d.%02d", year, month, day);
+        return Integer.parseInt(split[0]) * 12 * 28
+            + Integer.parseInt(split[1]) * 28
+            + Integer.parseInt(split[2]);
     }
 }

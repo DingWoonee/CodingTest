@@ -1,4 +1,5 @@
-import java.util.*;
+package cote_preparation;
+
 import java.io.*;
 /*
 b를 한곳으로 모아야 함

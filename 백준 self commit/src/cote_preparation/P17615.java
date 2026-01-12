@@ -1,3 +1,5 @@
+package cote_preparation;
+
 import java.util.*;
 import java.io.*;
 /*

@@ -1,31 +1,22 @@
 class Solution {
     public int solution(int n, int k) {
-        int answer = 0;
+        String str = Integer.toString(n, k);
+        String[] split = str.split("0+");
         
-        String converted = Integer.toString(n, k);
-        String[] split = converted.split("0+");
-        
-        for (String str : split) {
-            if (str.isEmpty()) {
-                continue;
-            }
-            long num = Long.parseLong(str);
-            if (isPrime(num)) {
-                answer++;
-            }
+        int cnt = 0;
+        for (String s : split) {
+            if (isPrime(Long.parseLong(s))) cnt++;
         }
         
-        return answer;
+        return cnt;
     }
     
-    private boolean isPrime(long num) {
-        if (num == 1) {
-            return false;
-        }
-        for (long i = 2; i * i <= num; i++) {
-            if (num % i == 0) {
-                return false;
-            }
+    private boolean isPrime(long n) {
+        if (n == 1) return false;
+        if (n == 2) return true;
+        if (n % 2 == 0) return false;
+        for (long i = 3; i * i <= n; i++) {
+            if (n % i == 0) return false;
         }
         return true;
     }

@@ -12,25 +12,21 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        
         long A = Long.parseLong(st.nextToken());
         long B = Long.parseLong(st.nextToken());
 
-        long sum = 0;
-        long level = 1;
-        while (level <= B) {
-            long range = level * 2;
-            long cur = 0;
+        System.out.println(calcCnt(B) - calcCnt(A - 1));
+    }
+    
+    private static long calcCnt(long n) {
+        long cnt = 0;
 
-            cur += ((B + 1) / range) * level;
-            cur += Math.max(0, ((B + 1) % range) - level);
-
-            cur -= (A / range) * level;
-            cur -= Math.max(0, (A % range) - level);
-
-            sum += cur;
-            level *= 2;
+        for (long level = 1; level <= n; level <<= 1) {
+            cnt += ((n + 1) / (level * 2)) * level;
+            cnt += Math.max(0, (n + 1) % (level * 2) - level);
         }
 
-        System.out.println(sum);
+        return cnt;
     }
 }

@@ -49,7 +49,7 @@ public class Main {
 
         long result = 0;
         for (int i = 1; i <= N; i++) {
-            result += (N - 1) * dists[i];
+            result += (N - 1) * 1l * dists[i];
         }
 
         // 각 노드를 루트로 하는 트리의 노드 수 세기

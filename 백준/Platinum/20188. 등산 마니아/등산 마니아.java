@@ -9,7 +9,7 @@ public class Main {
 
     private static int N;
     private static List<Integer>[] graph;
-    private static int[] nodes;
+    private static long[] nodes;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -47,13 +47,13 @@ public class Main {
             }
         }
 
-        int result = 0;
+        long result = 0;
         for (int i = 1; i <= N; i++) {
             result += (N - 1) * dists[i];
         }
 
         // 각 노드를 루트로 하는 트리의 노드 수 세기
-        nodes = new int[N + 1];
+        nodes = new long[N + 1];
         dfs(1, 1);
         for (int i = 2; i <= N; i++) {
             result -= (nodes[i] * (nodes[i] - 1)) / 2;

@@ -14,11 +14,13 @@ public class Main {
         }
         System.out.println(dp[N]);
         if (N <= 20) {
-            recur(N, 1, 3);
+            StringBuilder sb = new StringBuilder();
+            recur(sb, N, 1, 3);
+            System.out.println(sb.toString());
         }
     }
 
-    private static void recur(int N, int cur, int target) {
+    private static void recur(StringBuilder sb, int N, int cur, int target) {
         int temp = 3;
         for (int i = 1; i <= 3; i++) {
             if (cur != i && target != i) {
@@ -27,8 +29,8 @@ public class Main {
             }
         }
 
-        if (N > 1) recur(N - 1, cur, temp);
-        System.out.println(cur + " " + target);
-        if (N > 1) recur(N - 1, temp, target);
+        if (N > 1) recur(sb, N - 1, cur, temp);
+        sb.append(cur); sb.append(" "); sb.append(target); sb.append("\n");
+        if (N > 1) recur(sb, N - 1, temp, target);
     }
 }

@@ -18,9 +18,11 @@ public class Main {
         int[][] dp = new int[ch1.length + 1][ch2.length + 1];
         for (int i = 0; i < ch1.length; i++) {
             for (int j = 0; j < ch2.length; j++) {
-                dp[i + 1][j + 1] = dp[i][j + 1];
-                dp[i + 1][j + 1] = Math.max(dp[i + 1][j + 1], dp[i + 1][j]);
-                dp[i + 1][j + 1] = Math.max(dp[i + 1][j + 1], dp[i][j] + (ch1[i] == ch2[j] ? 1 : 0));
+                if (ch1[i] == ch2[j]) {
+                    dp[i + 1][j + 1] = dp[i][j] + 1;
+                } else {
+                    dp[i + 1][j + 1] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+                }
             }
         }
 

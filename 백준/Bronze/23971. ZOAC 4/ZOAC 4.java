@@ -11,7 +11,7 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        int result = (H / (N + 1) + (H % (N + 1) == 0 ? 0 : 1)) * (W / (M + 1) + (W % (M + 1) == 0 ? 0 : 1));
+        int result = ((H + N) / (N + 1)) * ((W + M) / (M + 1));
 
         System.out.println(result);
     }
